@@ -7,12 +7,12 @@ module tbench ();
 //==============================================================================
 //-- tbench : RESET generator
 //==============================================================================
-    reg resetn;
+    reg rst;
 
     initial begin
-        resetn = 1'b1;
+        rst = 1'b1;
         #1_234_000
-        resetn = 1'b0;
+        rst = 1'b0;
     end
 
 //==============================================================================
@@ -35,13 +35,15 @@ module tbench ();
 
     blinkpat blinkpat (
         .clk    (clk)       //- in  clock
-    ,   .rst (resetn)    //- in  reset negative
+    ,   .rst    (rst)    //- in  reset negative
     ,   .btn    (sig_i)     //- in  signal
     ,   .led_rgb    (sig_o)     //- out signal
     );
 
-
-    // `include "blinkpat.vhdl"
+    game_of_life_top game_of_life_top (
+        .clk    (clk)       //- in  clock
+    ,   .rst    (rst)    //- in  reset negative
+    );
 
 
 // シーケンス制御

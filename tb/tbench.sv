@@ -30,31 +30,26 @@ module tbench ();
 //==============================================================================
 //-- tbench : Test Target
 //==============================================================================
-    reg         sig_i;  // signal in
-    reg [2:0]   sig_o;  // signal out
-
-    blinkpat blinkpat (
-        .clk    (clk)       //- in  clock
-    ,   .rst    (rst)    //- in  reset negative
-    ,   .btn    (sig_i)     //- in  signal
-    ,   .led_rgb    (sig_o)     //- out signal
-    );
+    reg [63:0] state;
 
     game_of_life_top game_of_life_top (
         .clk    (clk)       //- in  clock
     ,   .rst    (rst)    //- in  reset negative
+    ,   .state  (state)  //- out state
     );
 
 
-// シーケンス制御
+    // シーケンス制御
     initial begin
         $display("run start");
         #(1_000_000_000 / (FREQ_CLK*1_000) * 10)
-        sig_i = 1'b1;
-        #(1_000_000_000 / (FREQ_CLK*1_000) * 1)
-        sig_i = 1'b0;
-        #(1_000_000_000 / (FREQ_CLK*1_000) * 10)
         $finish;
+    end
+
+    // stateをダンプ
+    always @(posedge clk) begin
+        // 2進数で8bitずつ表示
+        $display("%b\n%b\n%b\n%b\n%b\n%b\n%b\n%b\n", state[63:56], state[55:48], state[47:40], state[39:32], state[31:24], state[23:16], state[15:8], state[7:0]);
     end
 
 endmodule

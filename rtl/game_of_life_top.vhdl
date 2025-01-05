@@ -9,12 +9,13 @@ entity game_of_life_top is
     );
     port (
         clk: in std_logic;
-        rst: in std_logic
+        rst: in std_logic;
+        state: out std_logic_vector((ROWS*COLS)-1 downto 0)
     );
 end game_of_life_top;
 
 architecture RTL of game_of_life_top is
-    signal s_cur_state : std_logic_vector((ROWS*COLS) downto 0);
+    signal s_cur_state : std_logic_vector((ROWS*COLS)-1 downto 0);
 
 
     function calc_next_state( cur_state : std_logic_vector ) return std_logic_vector is
@@ -48,14 +49,14 @@ architecture RTL of game_of_life_top is
                 count := count + cur_state(i + COLS);
                 count := count + cur_state(i + COLS + 1);
                 if ( cur_state(i) = '0' ) then
-                    if ( count = "011" ) then
+                    if ( count = "0011" ) then
                         -- tanjou
                         next_state(i) := '1';
                     else
                         next_state(i) := '0';
                     end if;
                 else
-                    if ( count = "010" or count = "011" ) then
+                    if ( count = "0010" or count = "0011" ) then
                         -- seizon
                         next_state(i) := '1';
                     else
@@ -80,4 +81,7 @@ begin
             end if;
         end if;
     end process;
+
+    -- output
+    state <= s_cur_state;
 end RTL;
